@@ -1,0 +1,33 @@
+/* Acetate Time System: Ink primary, Canvas secondary, Pane tertiary.
+   Visible labels, 44px targets, sharp corners, and Deep Horizon focus. */
+a.nav-button,button.nav-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:11px 18px;border:1px solid #d8d8d2;border-radius:0;font:500 13px/20px "Helvetica Neue",Arial,sans-serif;text-decoration:none;white-space:nowrap;background:#fff;color:#101010;cursor:pointer;transition:background-color .16s,border-color .16s,color .16s}
+a.nav-button:hover,button.nav-button:hover{background:#f7f7f5;border-color:#646866}
+a.nav-button:active,button.nav-button:active{background:#f0f3f3;border-color:#174b59}
+a.nav-button:focus-visible,button.nav-button:focus-visible{outline:2px solid #174b59;outline-offset:3px}
+a.nav-primary,a.nav-signin{background:#101010;color:#fff;border-color:#101010}
+a.nav-primary:hover,a.nav-signin:hover{background:#212626;color:#fff;border-color:#212626}
+a.nav-primary:active,a.nav-signin:active{background:#174b59;color:#fff;border-color:#174b59}
+a.nav-back{background:transparent;border-color:transparent;color:#646866}
+a.nav-back:hover{background:#f7f7f5;border-color:transparent;color:#101010}
+a.nav-back:active{background:#f0f3f3;border-color:transparent;color:#101010}
+button.nav-tertiary{display:flex;width:fit-content;background:#f7f7f5;border-color:transparent;color:#212626}
+button.nav-tertiary:hover{background:#f0f3f3;border-color:#d8d8d2}
+button.nav-tertiary:active{background:#dfe7e9;border-color:#646866}
+.social-links{gap:12px;margin-top:16px}.social-links a.nav-button{min-width:100px}.email.nav-button{margin-top:4px}
+@media(max-width:400px){a.nav-button,button.nav-button{padding-inline:14px}}
+@media(prefers-reduced-motion:reduce){a.nav-button,button.nav-button{transition:none}}
+@media(forced-colors:active){a.nav-button,button.nav-button{border-color:ButtonText}a.nav-button:focus-visible,button.nav-button:focus-visible{outline-color:Highlight}}
+
+.contact-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}a.nav-ghost{background:transparent;border-color:transparent;color:#212626;padding-inline:14px}a.nav-ghost:hover{background:#f7f7f5;border-color:transparent;color:#101010}a.nav-ghost:active{background:#f0f3f3;border-color:transparent;color:#174b59}.button-icon{display:block;width:20px;height:20px;flex:none;fill:currentColor}.contact-actions .nav-button{border-radius:0}
+/* Keep every interactive control consistent with the requested sharp geometry. */
+button,.category-edit,.category-option,.dialog-close,.horizon,.horizon button{border-radius:0}
+
+/* Align navigation labels, icons, and marks across the four static pages. */
+.site-header,.masthead{box-sizing:border-box;width:100%;max-width:1200px;min-height:100px;height:auto;margin:0 auto;padding:24px 40px;display:flex;align-items:center;justify-content:space-between;gap:12px 24px;flex-wrap:wrap}
+.site-header>a:first-child,.masthead>a:first-child{display:flex;align-items:center;min-height:44px}
+.site-header img,.masthead img{display:block;width:190px;height:auto}
+.legal-page .legal-navigation{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:36px}
+.legal-navigation a.nav-button{height:44px;min-height:44px;padding:11px 14px;line-height:20px;margin:0}
+.legal-navigation a[aria-current="page"]{background:#f0f3f3;color:#101010}
+.contact-actions,.footer-links,footer nav{align-items:center}
+@media(max-width:760px){.site-header,.masthead{min-height:84px;padding:20px;gap:8px 16px}.site-header img,.masthead img{width:186px}.legal-page{padding-inline:20px}.legal-page .legal-navigation{gap:4px}.legal-navigation a.nav-button{padding-inline:12px}}

@@ -10,6 +10,10 @@
     {
       "source": "/terms-of-service",
       "destination": "/terms-of-service.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact.html"
     }
   ]
 }

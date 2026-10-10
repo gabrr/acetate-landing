@@ -4,30 +4,33 @@
 // Fictional English / USD demo. These amounts are not an FX conversion of the supplied PDF.
 // Signed amounts: money received is positive; money paid is negative.
 const transactions = [
- {date:'2026-06-01',description:'Monthly salary',amount:7236.11,category:'Income'},
- {date:'2026-05-01',description:'Monthly rent',amount:-2450.00,category:'Fixed'},
- {date:'2026-05-01',description:'Utilities and internet',amount:-286.40,category:'Fixed'},
- {date:'2026-05-02',description:'Groceries and household',amount:-684.75,category:'Variable'},
- {date:'2026-05-04',description:'Transport and fuel',amount:-318.60,category:'Variable'},
- {date:'2026-05-07',description:'Subscriptions',amount:-66.90,category:'Fixed'},
- {date:'2026-04-03',description:'Laptop purchase',amount:-148.07,category:'Installment',current:2,total:12},
- {date:'2026-04-11',description:'Car payment',amount:-597.66,category:'Installment',current:2,total:24},
- {date:'2026-05-07',description:'Home furniture',amount:-977.93,category:'Installment',current:1,total:10},
- {date:'2026-06-03',description:'Transfer to savings',amount:-250,category:'Movements',note:'Between your own accounts'},
- {date:'2026-06-10',description:'Credit card payment',amount:-2196.25,category:'Movements',note:'Settlement of purchases already recorded'}
+ {date:'2026-06-01',description:'Take-home pay',amount:7236.11,category:'Income'},
+ {date:'2026-06-01',description:'Monthly rent',amount:-2450.00,category:'Fixed'},
+ {date:'2026-06-01',description:'Utilities and internet',amount:-286.40,category:'Fixed'},
+ {date:'2026-06-02',description:'Groceries and household',amount:-684.75,category:'Variable'},
+ {date:'2026-06-04',description:'Transport and fuel',amount:-318.60,category:'Variable'},
+ {date:'2026-06-07',description:'Subscriptions',amount:-66.90,category:'Fixed'},
+ {date:'2026-06-03',description:'Laptop purchase',amount:-148.07,category:'Installment',current:2,total:12},
+ {date:'2026-06-11',description:'Car payment',amount:-597.66,category:'Installment',current:2,total:24},
+ {date:'2026-06-07',description:'Home furniture',amount:-177.93,category:'Installment',current:1,total:10},
+ {date:'2026-06-12',description:'Insurance and healthcare',amount:-300,category:'Fixed'},
+ {date:'2026-06-18',description:'Dining and personal spending',amount:-500,category:'Variable'},
+ {date:'2026-06-23',description:'Transfer to savings',amount:-250,category:'Movements',note:'Between your own accounts'},
+ {date:'2026-06-28',description:'Credit card payment',amount:-1896.25,category:'Movements',note:'Settlement of purchases already recorded'}
 ];
 // Demonstration confidence labels, not measured model accuracy.
 transactions.forEach((t,i)=>{t.confidence=[3,8].includes(i)?'Review':'High';});
 const categories={Fixed:'#212626',Variable:'#728596',Income:'#2f6f7e',Installment:'#a7b8bf',Movements:'#646866'};
 // Existing wealth and annual return for the fictional scenario; projections follow the transaction data.
-const assumptions={starting:2650609.19,annualReturn:.05};
+const assumptions={starting:5184.73,annualReturn:.05};
 function monthly(index,items=transactions){const groups={Fixed:0,Variable:0,Installment:0};let income=0,movements=0;for(const t of items){if(t.category==='Movements'){movements+=t.amount;continue}if(t.category==='Income'){income+=t.amount;continue}if(t.category!=='Installment'||(t.total?t.current+index<=t.total:index===0))groups[t.category]-=t.amount;}const spent=Object.values(groups).reduce((a,b)=>a+b,0);return {groups,income,movements,spent,available:income-spent}}
-function projection(years){const rate=(1+assumptions.annualReturn)**(1/12),growth=[assumptions.starting],deposits=[assumptions.starting];for(let m=0;m<years*12;m++){growth.push(growth.at(-1)*rate+Math.max(0,monthly(m).available));deposits.push(deposits.at(-1)+Math.max(0,monthly(m).available))}return {growth,deposits}}
+function projection(years){const rate=(1+assumptions.annualReturn)**(1/12),growth=[assumptions.starting],deposits=[assumptions.starting];for(let m=0;m<years*12;m++){growth.push(growth.at(-1)*rate+monthly(m).available);deposits.push(deposits.at(-1)+monthly(m).available)}return {growth,deposits}}
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],clamp=n=>Math.max(0,Math.min(1,n)),ease=n=>{n=clamp(n);return n*n*(3-2*n)};
 const usd=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n),exact=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n),short=n=>n>=1000000?'$'+Number((n/1000000).toFixed(1))+'m':'$'+Math.round(n/1000)+'k';
 const dates=['Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May'];
 // The source statement summary uses the same initial data as the extraction.
+$('#record-count').textContent=transactions.length+' example records';
 const statement=monthly(0);$('#statement-income').textContent=exact(statement.income);$('#statement-purchases').textContent=exact(statement.spent);$('#statement-available').textContent=exact(statement.available);
 $('#statement-rows').innerHTML=transactions.map(t=>`<tr><td>${new Date(t.date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'2-digit'})}</td><td>${t.description}${t.total?' · Payment '+t.current+'/'+t.total:''}</td><td>${exact(t.amount)}</td></tr>`).join('');
 $('#markdown-lines').innerHTML=transactions.map(t=>`<div class="md-row">| ${t.date} | ${t.description}${t.total?' ['+t.current+'/'+t.total+']':''} | <span>${t.amount.toFixed(2)}</span> |</div>`).join('');
@@ -42,13 +45,13 @@ let selected=0,years=20;
 function renderCapacity(){const data=Array.from({length:12},(_,i)=>monthly(i)),ceiling=Math.max(1,...data.map(d=>Math.max(d.income,d.spent)));$('.y-axis').innerHTML=[ceiling,ceiling/2,0].map(v=>'<span>'+usd(v)+'</span>').join('');$('#month-bars').innerHTML=data.map((d,i)=>`<button class="month-bar" data-month="${i}" aria-pressed="${i===selected}" aria-label="${dates[i]}: ${exact(d.spent)} spending, ${exact(d.available)} available to invest"><span class="bar-stack" aria-hidden="true"><span class="bar-segment bar-available" style="height:${Math.max(0,d.available)/ceiling*100}%"></span>${Object.entries(d.groups).reverse().map(([k,v])=>`<span class="bar-segment" style="height:${v/ceiling*100}%;background:${categories[k]}"></span>`).join('')}</span><span class="month-label">${dates[i]}</span></button>`).join('');$$('[data-month]').forEach(b=>{b.onclick=()=>selectMonth(Number(b.dataset.month));b.onkeydown=e=>{if(['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();const next=Math.max(0,Math.min(11,selected+(e.key==='ArrowRight'?1:-1)));selectMonth(next);$(`[data-month="${next}"]`).focus()}}});$('#legend').innerHTML='<span><i style="background:#dfe7e9"></i>Available to invest</span>'+Object.entries(categories).map(([c,color])=>`<span><i style="background:${color}"></i>${c==='Income'?'Income':c==='Movements'?'Movements · excluded':c}</span>`).join('');selectMonth(selected)}
 function selectMonth(i){selected=i;$('#capacity-value').textContent=exact(monthly(i).available);$('#capacity-label').textContent=(monthly(i).available<0?'Shortfall in ':'Available in ')+dates[i]+' '+(i<7?'2026':'2027');$$('[data-month]').forEach(b=>b.setAttribute('aria-pressed',Number(b.dataset.month)===i))}
 function renderWealth(){
- const {growth,deposits}=projection(years),mobile=innerWidth<761,width=mobile?620:1000,height=mobile?330:370,left=mobile?85:64,right=width-20,bottom=height-60,font=mobile?17:11,max=Math.ceil(growth.at(-1)/100000)*100000,x=i=>left+i/(growth.length-1)*(right-left),y=v=>bottom-v/max*(bottom-25);let grid='';
+ const {growth,deposits}=projection(years),mobile=innerWidth<761,width=mobile?620:1000,height=mobile?330:370,left=mobile?85:64,right=width-20,bottom=height-60,font=mobile?17:11,max=Math.max(100000,Math.ceil(Math.max(...growth,...deposits)/100000)*100000),min=Math.min(0,Math.floor(Math.min(...growth,...deposits)/100000)*100000),x=i=>left+i/(growth.length-1)*(right-left),y=v=>bottom-(v-min)/(max-min)*(bottom-25);let grid='';
  $('#wealth-chart').setAttribute('viewBox',`0 0 ${width} ${height}`);
- for(let i=0;i<=4;i++){const val=max*i/4;grid+=`<path d="M${left} ${y(val)}H${right}" stroke="#ecece8"/><text x="0" y="${y(val)+4}" fill="#646866" font-size="${font}" font-family="Arial">${val===0?'$0':short(val)}</text>`}
- for(let i=0;i<=4;i++){const at=years*i/4;grid+=`<text x="${left+(right-left)*i/4}" y="${height-20}" text-anchor="${i===0?'start':i===4?'end':'middle'}" fill="#646866" font-size="${font}" font-family="Arial">${i===0?'Today':at+(mobile?' yr':' years')}</text>`}
+ for(let i=0;i<=4;i++){const val=min+(max-min)*i/4;grid+=`<path d="M${left} ${y(val)}H${right}" stroke="#ecece8"/><text x="0" y="${y(val)+4}" fill="#646866" font-size="${font}" font-family="Arial">${val===0?'$0':short(val)}</text>`}
+ for(let i=0;i<=4;i++){const at=years*i/4;grid+=`<text x="${left+(right-left)*i/4}" y="${height-20}" text-anchor="${i===0?'start':i===4?'end':'middle'}" fill="#646866" font-size="${font}" font-family="Arial">${i===0?'Jun 2026':at+(mobile?' yr':' years')}</text>`}
  const path=arr=>arr.map((v,i)=>(i?'L':'M')+x(i).toFixed(2)+' '+y(v).toFixed(2)).join(' ');
  $('#wealth-chart').innerHTML=`<defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#76a8b2" stop-opacity=".22"/><stop offset="1" stop-color="#76a8b2" stop-opacity="0"/></linearGradient></defs>${grid}<path d="${path(growth)}L${right} ${bottom}H${left}Z" fill="url(#area)"/><path d="${path(deposits)}" stroke="#b9bdbb" stroke-width="2" fill="none"/><path id="wealth-line" d="${path(growth)}" stroke="#101010" stroke-width="3" fill="none"/><circle cx="${right}" cy="${y(growth.at(-1))}" r="4" fill="#101010"/>`;
- $('#wealth-value').textContent=usd(growth.at(-1));$('#wealth-label').textContent='Projected wealth · '+(2026+years);$('#wealth-chart').setAttribute('aria-label',`Illustrative wealth over ${years} years: ${usd(growth.at(-1))} including growth; ${usd(deposits.at(-1))} from starting balance and contributions.`);$$('[data-years]').forEach(b=>b.setAttribute('aria-pressed',Number(b.dataset.years)===years));
+ $('#wealth-value').textContent=usd(growth.at(-1));$('#wealth-label').textContent='Projected wealth · '+(2026+years);$('#wealth-chart').setAttribute('aria-label',`Illustrative wealth over ${years} years: ${usd(growth.at(-1))} including growth; ${usd(deposits.at(-1))} without investment growth, including any withdrawals.`);$$('[data-years]').forEach(b=>b.setAttribute('aria-pressed',Number(b.dataset.years)===years));
 }
 renderCapacity();renderWealth();$$('[data-years]').forEach(b=>b.onclick=()=>{years=Number(b.dataset.years);renderWealth()});
 const preference=matchMedia('(prefers-reduced-motion: reduce)');let reduced=preference.matches;
