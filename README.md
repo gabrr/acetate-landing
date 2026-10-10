@@ -15,6 +15,16 @@ The Sign in link opens https://app.acetate.me/login. Authentication belongs to t
 
 For hosting, publish this directory as static files. The existing `vercel.json` has no build command and preserves the `/privacy-policy` and `/terms-of-service` aliases used by the application. Direct `.html` links work without rewrites and from disk.
 
-The landing page uses fictional data and local, in-memory category corrections. It does not upload statements, train an agent, or save corrections. Reloading restores the example. The source design remains in `prototypes/acetate-landing-page/simple.*` at the workspace root; update this static copy when changing that prototype.
+The landing page uses fictional data and local, in-memory category corrections. It does not upload statements, train an agent, or save corrections. Reloading restores the example. This standalone repository is the current landing source; the earlier prototype is not kept in sync.
 
 Contact icons use Phosphor Icons Core 2.1.1 Regular, with unmodified paths. License: `assets/PHOSPHOR-LICENSE.txt`.
+
+## SEO and static fallbacks
+
+Canonical URLs use `https://www.acetate.me`, matching the live redirect. `robots.txt` and `sitemap.xml` cover the four public pages. Vercel redirects `.html` aliases to their canonical paths while direct files still open from disk. Validate redirect/rewrite behavior after deployment.
+
+The initial HTML includes the full demo and charts. JavaScript adds interaction and scroll motion. After changing the demo data or render functions in `landing.js`, run `node scripts/sync-demo.mjs` and commit the refreshed `index.html`. This is an optional authoring step, not a hosting requirement. Static controls stay disabled until their interaction is available. The no-script view exposes projection assumptions.
+
+The statement photo uses responsive AVIF with WebP fallbacks; the portrait uses WebP, which measured smaller for that image. Both have variants at 320, 480, 640, 960, and 1440 pixels. Sizes match the CSS image slots, including statement padding. Original PNG assets are preserved. To regenerate image encodings offline, run `python3 scripts/optimize-images.py` with Pillow and AVIF support installed. This authoring tool is not required to host or open the page. `acetate-social-en.png` is the English sharing card. Structured data describes Acetate and Gabriel using visible information; it makes no rating, pricing, or financial-adviser claims.
+
+After deployment: validate redirects, sitemap and canonical URLs; inspect the page in Search Console; validate structured data; run mobile/desktop PageSpeed. Search Console verification needs the owner's account and must not be fabricated in the HTML.

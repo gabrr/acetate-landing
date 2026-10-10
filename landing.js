@@ -55,7 +55,7 @@ function renderWealth(){
 }
 renderCapacity();renderWealth();$$('[data-years]').forEach(b=>b.onclick=()=>{years=Number(b.dataset.years);renderWealth()});
 const preference=matchMedia('(prefers-reduced-motion: reduce)');let reduced=preference.matches;
-const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.12,rootMargin:'0px 0px -35px 0px'});$$('.reveal,.transaction-row').forEach(el=>observer.observe(el));
+const observer=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.12,rootMargin:'0px 0px -35px 0px'}):{observe(el){el.classList.add('visible')}};$$('.reveal,.transaction-row').forEach(el=>observer.observe(el));
 const jsonCode=$('.json-code');function sizeJson(){const mobile=innerWidth<761,copy=mobile?$('.reverse .chapter-copy').offsetHeight:0;jsonCode.style.height=reduced?'auto':Math.max(180,innerHeight-(mobile?copy+170:230))+'px';jsonCode.style.minHeight='0';jsonCode.style.overflow=reduced?'visible':'hidden'}sizeJson();
 function box(el){const r=el.getBoundingClientRect();let y=0;for(let n=el;n;n=n.offsetParent)y+=n.offsetTop;return {x:r.left+r.width/2,y,width:r.width,height:el.offsetHeight}}
 let pathLength=0;function geometry(){const pdfAnchor=$('#pdf-anchor');$('.hero').style.minHeight=(pdfAnchor.offsetTop+pdfAnchor.offsetHeight+100)+'px';const root=box($('#flow')),nodes=['#pdf-anchor','#markdown-anchor','#json-anchor','#list-anchor'].map(s=>box($(s)));const svg=$('#thread');svg.setAttribute('viewBox',`0 0 ${innerWidth} ${$('#flow').offsetHeight}`);let d='';nodes.forEach((node,i)=>{const top=i===nodes.length-1?box($('#list-section')).y-root.y+20:node.y-root.y+20,bottom=node.y-root.y+node.height-25;if(i===0){d=`M${node.x} ${bottom}`;return}const previous=nodes[i-1],start=previous.y-root.y+previous.height-25,gap=top-start;d+=` C${previous.x} ${start+gap*.55}, ${node.x} ${top-gap*.55}, ${node.x} ${top}`;if(i<nodes.length-1)d+=` L${node.x} ${bottom}`});$('#thread-base').setAttribute('d',d);$('#thread-color').setAttribute('d',d);pathLength=$('#thread-color').getTotalLength();$('#thread-color').style.strokeDasharray=pathLength;update()}
@@ -73,7 +73,7 @@ function openCategory(index,button){
  $('#category-options').innerHTML=options.map(c=>`<button class="category-option" data-category="${c}" aria-pressed="${c===t.category}"><span><strong>${c}</strong><small>${explanations[c]}</small></span><span aria-hidden="true">${c===t.category?'✓':'→'}</span></button>`).join('');
  picker.style.left='';picker.style.top='';picker.showModal();
  if(innerWidth>760){const r=button.getBoundingClientRect();picker.style.left=Math.max(20,Math.min(r.left,innerWidth-picker.offsetWidth-20))+'px';picker.style.top=Math.max(20,Math.min(r.bottom+8,innerHeight-picker.offsetHeight-20))+'px';}
- $$('[data-category]').forEach(b=>b.onclick=()=>{if(b.dataset.category===t.category){picker.close();return}lastCorrection={index,category:t.category,confidence:t.confidence};t.category=b.dataset.category;t.confidence='Reviewed';picker.close();refreshCorrection();$('#toast-title').textContent='Category updated';$('#toast-message').textContent='Learning preview: your correction would help the agent categorize similar transactions.';$('#undo-correction').hidden=false;$('#correction-toast').hidden=false;});
+ $$('[data-category]').forEach(b=>b.onclick=()=>{if(b.dataset.category===t.category){picker.close();return}lastCorrection={index,category:t.category,confidence:t.confidence};t.category=b.dataset.category;t.confidence='Reviewed';picker.close();refreshCorrection();$('#toast-title').textContent='Category updated';$('#toast-message').textContent='Demo updated: see how this category changes your monthly investment capacity and wealth projection.';$('#undo-correction').hidden=false;$('#correction-toast').hidden=false;});
 }
 function refreshCorrection(){renderTransactions(true);renderCapacity();renderWealth();update();$(`[data-transaction="${editedIndex}"]`)?.focus({preventScroll:true});}
 $('#undo-correction').onclick=()=>{if(!lastCorrection)return;const {index,category,confidence}=lastCorrection;Object.assign(transactions[index],{category,confidence});editedIndex=index;lastCorrection=null;refreshCorrection();$('#toast-title').textContent='Change undone';$('#toast-message').textContent='The previous category and projection have been restored.';$('#undo-correction').hidden=true;};
@@ -83,4 +83,7 @@ $$('dialog .dialog-close').forEach(b=>b.onclick=()=>b.closest('dialog').close())
 [picker,assumptionsDialog].forEach(d=>d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}}));
 picker.addEventListener('close',()=>returnFocus?.focus({preventScroll:true}));
 
+$$('[data-demo-control]').forEach(button=>button.disabled=false);
+document.documentElement.classList.add('demo-ready');
+geometry();
 })();
