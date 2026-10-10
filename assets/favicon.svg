@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="geometricPrecision" role="img" aria-labelledby="title desc">
+  <title id="title">Acetate Sightline micro mark</title>
+  <desc id="desc">A pixel-conscious small-size version of the Sightline mark.</desc>
+  <path fill="#000" fill-rule="evenodd" d="M1 0H15V16H1Z M1.5 10L3.25 8.25H12.75L14.5 10Z"/>
+</svg>
