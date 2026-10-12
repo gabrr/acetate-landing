@@ -11,7 +11,7 @@ Open `index.html` directly in a browser. No server, dependencies, framework, or 
 - `navigation.css`: shared navigation and contact controls with hover, keyboard-focus, and pressed states.
 - `terms-of-service.html`, `privacy-policy.html`, and `legal.css`: existing legal documents, linked from the footer. Their legal wording is unchanged.
 
-The Sign in link opens https://app.acetate.me/login. Authentication belongs to the application, not this static page.
+The Sign in link opens the floating sign-in card. Supabase is loaded on demand, and the app backend handles verified session handoff and invitation requests.
 
 For hosting, publish this directory as static files. The existing `vercel.json` has no build command and preserves the `/privacy-policy` and `/terms-of-service` aliases used by the application. Direct `.html` links work without rewrites and from disk.
 
@@ -28,3 +28,9 @@ The initial HTML includes the full demo and charts. JavaScript adds interaction 
 The statement photo uses responsive AVIF with WebP fallbacks; the portrait uses WebP, which measured smaller for that image. Both have variants at 320, 480, 640, 960, and 1440 pixels. Sizes match the CSS image slots, including statement padding. Original PNG assets are preserved. To regenerate image encodings offline, run `python3 scripts/optimize-images.py` with Pillow and AVIF support installed. This authoring tool is not required to host or open the page. `acetate-social-en.png` is the English sharing card. Structured data describes Acetate and Gabriel using visible information; it makes no rating, pricing, or financial-adviser claims.
 
 After deployment: validate redirects, sitemap and canonical URLs; inspect the page in Search Console; validate structured data; run mobile/desktop PageSpeed. Search Console verification needs the owner's account and must not be fabricated in the HTML.
+
+## Sign-in card rollout
+
+`sign-in.css` and `sign-in.js` implement the landing-owned dialog. Google uses PKCE with a callback to `https://www.acetate.me/?auth=callback`. The app backend must be deployed with the companion changes in `apps/frontend`: `/api/auth/config`, `/api/request-access`, `/api/auth/authorize`, and `/auth/receive`. Vercel rewrites keep the landing static. Opening HTML from disk previews the design but authentication requires HTTPS hosting (localhost is suitable for isolated UI tests).
+
+Configure the Supabase redirect URL, passkey RP/origin settings, invited-member allowlist, and Resend variables as described in the frontend README before rollout. Passkeys require prior enrollment; no credentials were registered during development. The vendored Supabase browser SDK is version 2.110.8 and is fetched only after a sign-in action. Invitation submissions in screenshot tests used a localhost fixture, not real mail delivery.

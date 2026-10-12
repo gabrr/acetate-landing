@@ -4,6 +4,18 @@
   "outputDirectory": ".",
   "rewrites": [
     {
+      "source": "/api/auth/config",
+      "destination": "https://app.acetate.me/api/auth/config"
+    },
+    {
+      "source": "/api/auth/authorize",
+      "destination": "https://app.acetate.me/api/auth/authorize"
+    },
+    {
+      "source": "/api/request-access",
+      "destination": "https://app.acetate.me/api/request-access"
+    },
+    {
       "source": "/privacy-policy",
       "destination": "/privacy-policy.html"
     },
@@ -36,6 +48,11 @@
       "source": "/terms-of-service.html",
       "destination": "/terms-of-service",
       "permanent": true
+    },
+    {
+      "source": "/login",
+      "destination": "/#sign-in",
+      "permanent": false
     }
   ],
   "headers": [
