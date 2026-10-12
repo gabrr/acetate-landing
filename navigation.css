@@ -31,3 +31,13 @@ button,.category-edit,.category-option,.dialog-close,.horizon,.horizon button{bo
 .legal-navigation a[aria-current="page"]{background:#f0f3f3;color:#101010}
 .contact-actions,.footer-links,footer nav{align-items:center}
 @media(max-width:760px){.site-header,.masthead{min-height:84px;padding:20px;gap:8px 16px}.site-header img,.masthead img{width:186px}.legal-page{padding-inline:20px}.legal-page .legal-navigation{gap:4px}.legal-navigation a.nav-button{padding-inline:12px}}
+
+/* Reusable close/icon button: geometry and interaction states stay together. */
+button.icon-button{display:inline-grid;place-items:center;flex:none;width:44px;height:44px;min-height:44px;padding:0;border:1px solid transparent;border-radius:0;background:transparent;color:#646866;cursor:pointer;transition:background-color .16s,color .16s,border-color .16s}
+button.icon-button svg{display:block;pointer-events:none}
+button.icon-button:hover:not(:disabled){background:#f7f7f5;color:#101010;border-color:#d8d8d2}
+button.icon-button:active:not(:disabled){background:#f0f3f3;color:#174b59;border-color:#174b59}
+button.icon-button:focus-visible{outline:2px solid #174b59;outline-offset:3px}
+button.icon-button:disabled{opacity:.4;cursor:not-allowed}
+@media(prefers-reduced-motion:reduce){button.icon-button{transition:none}}
+@media(forced-colors:active){button.icon-button{border-color:ButtonText}button.icon-button:focus-visible{outline-color:Highlight}}

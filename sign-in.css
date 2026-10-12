@@ -1,20 +1,22 @@
-#sign-in-card{position:fixed;inset:0;margin:auto;width:min(440px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;padding:36px;border:1px solid #d8d8d2;border-radius:0;background:#fff;color:#101010;box-shadow:0 24px 100px #10101026;font:14px/1.5 "Helvetica Neue",Arial,sans-serif;text-align:left}
-#sign-in-card::backdrop{background:#21262655;backdrop-filter:blur(4px)}
+#sign-in-card{position:fixed;inset:0;margin:auto;width:min(400px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;padding:32px;border:1px solid #d8d8d2;border-radius:0;background:#fff;color:#101010;box-shadow:0 16px 56px #1010101a;font:14px/1.5 "Helvetica Neue",Arial,sans-serif;text-align:left}
+#sign-in-card::backdrop{background:#21262640;backdrop-filter:blur(2px)}
 #sign-in-card *{box-sizing:border-box}#sign-in-card [hidden]{display:none!important}
-#sign-in-card .entry-close{position:absolute;top:10px;right:10px;width:44px;height:44px;display:grid;place-items:center;background:transparent;border:0;color:#646866;font-size:24px;cursor:pointer}
-#sign-in-card .entry-logo{display:block;width:156px;height:auto;margin:4px 0 34px}
-#sign-in-card h2{font:400 38px/1.1 "Iowan Old Style",Baskerville,Georgia,serif;letter-spacing:-.04em;margin:0 0 12px;padding:0;background:none}
+#sign-in-card .entry-close{position:absolute;top:10px;right:10px}
+#sign-in-card h2{font:400 32px/1.15 "Iowan Old Style",Baskerville,Georgia,serif;letter-spacing:-.025em;margin:0 36px 24px 0;padding:0;background:none}
 #sign-in-card p{margin:0 0 24px;color:#646866;font-size:14px;line-height:1.6}
 #sign-in-card .entry-button{min-height:48px;width:100%;padding:12px 16px;display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid #d8d8d2;border-radius:0;background:#fff;color:#101010;font:500 14px/1.4 "Helvetica Neue",Arial,sans-serif;cursor:pointer;margin:0 0 12px;transition:background .15s}
 #sign-in-card .entry-button:hover{background:#f7f7f5}#sign-in-card .entry-button:active{background:#f0f3f3}
 #sign-in-card .entry-primary{background:#101010;color:#fff;border-color:#101010}#sign-in-card .entry-primary:hover{background:#212626}
 #sign-in-card button:disabled{opacity:.55;cursor:wait}#sign-in-card button:focus-visible,#sign-in-card input:focus-visible,#sign-in-card a:focus-visible{outline:2px solid #174b59;outline-offset:3px}
-#sign-in-card .entry-divider{border:0;border-top:1px solid #d8d8d2;margin:26px 0}
 #sign-in-card .entry-switch{background:none;border:0;padding:8px 0;min-height:44px;color:#174b59;font:500 14px "Helvetica Neue",Arial,sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
-#sign-in-card .entry-invite{display:flex;align-items:center;justify-content:space-between;gap:12px}#sign-in-card .entry-invite p{margin:0;font-size:13px}
+#sign-in-card .entry-invite{display:flex;justify-content:center;margin-top:8px}
 #sign-in-card label{display:block;font-size:12px;font-weight:500;margin:0 0 8px}#sign-in-card input{width:100%;height:48px;background:white;border:1px solid #d8d8d2;border-radius:0;padding:12px;font:16px "Helvetica Neue",Arial,sans-serif;color:#101010;margin:0 0 18px}
 #sign-in-card .entry-status{padding:12px 14px;background:#f7f7f5;color:#212626;font-size:13px;margin:14px 0}#sign-in-card .entry-status[data-error=true]{border-left:2px solid #9b3a30}
-#sign-in-card .entry-legal{font-size:11px;margin:26px 0 0;line-height:1.7}#sign-in-card .entry-legal a{color:inherit;text-underline-offset:3px}
+#sign-in-card .entry-legal{font-size:11px;margin:20px 0 0;line-height:1.7;text-align:center}#sign-in-card .entry-legal a{color:inherit;text-underline-offset:3px}
 #sign-in-card .entry-icon{width:20px;height:20px;flex:none}
-@media(max-width:480px){#sign-in-card{padding:30px 24px}#sign-in-card h2{font-size:34px}#sign-in-card .entry-logo{margin-bottom:28px}}
+@media(max-width:480px){#sign-in-card{padding:30px 24px}#sign-in-card h2{font-size:30px}}
 @media(prefers-reduced-motion:reduce){#sign-in-card *{transition:none}}
+
+#sign-in-card .entry-primary:active:not(:disabled){background:#174b59;border-color:#174b59;color:#fff}
+#sign-in-card .entry-switch:hover:not(:disabled){color:#101010;text-decoration-thickness:2px}
+#sign-in-card .entry-switch:active:not(:disabled){color:#174b59;background:#f0f3f3}
